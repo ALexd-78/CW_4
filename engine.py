@@ -31,13 +31,13 @@ class HH(Engine):
     @staticmethod
     def _get_salary(salary_info: dict):
         '''Обработка поля salary(зарплата): выводит зарплату 'от', если же она не указана,
-                то выводить зарплату 'до'. Или выводит 'Не указана', если поле отсутствует'''
+                то выводить зарплату 'до'. Или выводит 0, если поле отсутствует'''
         if salary_info:
             if salary_info.get('to'):
                 return salary_info['to']
             if salary_info.get('from'):
                 return salary_info['from']
-        return f'Не указана'
+        return 0
 
     @staticmethod
     def _get_remote_work(remote_work_info: dict):
@@ -55,7 +55,7 @@ class HH(Engine):
         for page in range(5):
             response = requests.get(f'https://api.hh.ru/vacancies?text={keyword}', params={'per_page': 100, 'page': page}).json()
             for vacancy in response['items']:
-                vacancies.extend({
+                vacancies.append({
                     'name': vacancy['name'],
                     'company_name': vacancy['employer']['name'],
                     'url': vacancy['alternate_url'],
@@ -72,12 +72,12 @@ class SuperJob(Engine):
     @staticmethod
     def _get_salary(salary_info: dict):
         '''Обработка поля salary(зарплата): выводит зарплату 'от', если же она не указана,
-        то выводить зарплату 'до'. или выводит 'Не указана', если поле отсутствует'''
+        то выводить зарплату 'до'. или выводит 0, если поле отсутствует'''
         if salary_info.get('payment_to'):
             return salary_info['payment_to']
         if salary_info.get('payment_from'):
             return salary_info['payment_from']
-        return f'Не указана'
+        return 0
 
     @staticmethod
     def _get_remote_work(remote_work_info: dict):
@@ -97,7 +97,7 @@ class SuperJob(Engine):
                                     params={'keywords': keyword, 'count': 100,
                                             'page': page}).json()
             for vacancy in response['objects']:
-                vacancies.extend({
+                vacancies.append({
                     'name': vacancy['profession'],
                     'company_name': vacancy['firm_name'],
                     'url': vacancy['link'],
