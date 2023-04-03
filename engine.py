@@ -1,9 +1,11 @@
 from abc import ABC, abstractmethod
 from connector import Connector
 
-import requests
 
-my_api_key: str = {'X-Api-App-Id': 'v3.r.119226455.7687e82d99284b1eaf5d22069f2b0f04254822c8.0dbf35dc534d7fae2b471f5cbdfc01641957355e'}
+import requests
+import os
+
+my_api_key: str = os.getenv('SJ_API_KEY')
 
 
 class Engine(ABC):
@@ -93,7 +95,7 @@ class SuperJob(Engine):
         '''Парсинг 500 вакансий и создание из них объекта типа list'''
         vacancies = []
         for page in range(5):
-            response = requests.get('https://api.superjob.ru/2.0/vacancies/', headers=my_api_key,
+            response = requests.get('https://api.superjob.ru/2.0/vacancies/', headers={'X-Api-App-Id': my_api_key},
                                     params={'keywords': keyword, 'count': 100,
                                             'page': page}).json()
             for vacancy in response['objects']:
